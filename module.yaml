@@ -1,0 +1,79 @@
+product:
+  type: jvm/app
+  platforms: [ jvm ]
+
+settings:
+  kotlin:
+    version: 2.3.0-Beta1
+    languageVersion: 2.3
+    apiVersion: 2.3
+    progressiveMode: true
+    allWarningsAsErrors: false
+    suppressWarnings: false
+    verbose: false
+    freeCompilerArgs:
+      - -Wextra
+      - -Xcontext-parameters
+      - -Xexpect-actual-classes
+      - -Xskip-prerelease-check
+      - -Xwhen-guards
+      - -Xmulti-dollar-interpolation
+      - -Xnon-local-break-continue
+      - -Xnested-type-aliases
+      - -Xreport-all-warnings
+      - -Xreturn-value-checker=check
+      - -Xcontext-sensitive-resolution
+      - -Xannotation-default-target=param-property
+    # - -Xsuppress-warning=CAN_BE_VAL
+    optIns:
+      - kotlin.ExperimentalStdlibApi
+      - kotlin.ExperimentalUnsignedTypes
+      - kotlin.contracts.ExperimentalContracts
+      - kotlin.io.encoding.ExperimentalEncodingApi
+      - kotlin.time.ExperimentalTime
+      - kotlinx.coroutines.ExperimentalCoroutinesApi
+      - kotlinx.serialization.ExperimentalSerializationApi
+      - kotlin.ExperimentalMultiplatform
+      - kotlin.uuid.ExperimentalUuidApi
+      - kotlin.concurrent.atomics.ExperimentalAtomicApi
+
+    serialization:
+      version: 1.9.0
+      format: json
+
+settings@native:
+  kotlin:
+    debug: false
+    optIns:
+      - kotlinx.cinterop.ExperimentalForeignApi
+      - kotlin.experimental.ExperimentalNativeApi
+
+dependencies:
+  - bom: $libs.kotlin.bom
+  - bom: $libs.kotlinx.coroutines.bom
+  - bom: $libs.kotlinx.serialization.bom
+  - bom: $libs.ktor.bom
+  - $libs.kotlinx.coroutines.core
+  - $libs.kotlin.logging
+  - $libs.ktor.client.core
+  - $libs.ktor.client.cio
+  - $libs.ktor.client.content.negotiation
+  - $libs.ktor.client.encoding
+  - $libs.ktor.client.logging
+  - $libs.ktor.client.resources
+  - $libs.ktor.client.auth
+  - $libs.ktor.client.serialization
+  - $libs.ktor.client.websockets
+  - $libs.ktor.serialization.xml
+  - $libs.kotlin.cryptography.core
+  - $libs.kotlin.cryptography.optimal
+  - $libs.kotlin.base32
+  - $libs.slf4j.simple
+
+dependencies@native:
+  - $libs.ktor.client.curl
+
+test-dependencies:
+  - $libs.kotlin.test
+  - $libs.kotlinx.coroutines.test
+  - $libs.ktor.client.mock

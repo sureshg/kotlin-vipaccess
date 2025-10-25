@@ -1,0 +1,20 @@
+# Mac OSX
+.DS_Store
+
+# IntelliJ IDEA
+.idea/
+*.iml
+out/
+
+# Java
+hs_err_pid*
+classes.lst
+*.jsa
+*.aot*
+jre/
+
+# Kotlin
+**/.kotlin
+
+# Amper
+build/
