@@ -6,6 +6,18 @@ kotlin-jvmtarget               = "21"
 kotlin-dsl-jvmtarget           = "21"
 kotlin-api-version             = "2.3"
 kotlin-lang-version            = "2.3"
+gradle                         = "9.2.0-rc-3"
+java-vendor                    = "Oracle"
+java-jvmargs                   = "--enable-preview"
+java-addmodules                = "jdk.incubator.vector"
+
+# Project specifc config
+group                          = "dev.suresh.build"
+app-mainclass                  = "dev.suresh.AppKt"
+dev-name                       = "sureshg"
+dev-email                      = "email@suresh.dev"
+org-name                       = "suresh.dev"
+org-url                        = "https://suresh.dev"
 
 # Dependency Versions
 bc-plugins                     = "2.17.0"
@@ -26,7 +38,7 @@ kotlinx-fuzz                   = "0.2.2"
 kotlinx-metadata               = "0.9.0"
 kotlinx-reflect-lite           = "1.2.0-RC"
 kotlin-lincheck                = "3.3.2"
-kotlin-wrappers                = "2025.10.11"
+kotlin-wrappers                = "2025.10.12"
 kotlin-redacted                = "1.15.0"
 kotlin-serviceloader           = "0.0.21"
 kotlinx-multik                 = "0.2.3"
@@ -42,11 +54,11 @@ postgresql                     = "42.7.8"
 embedded-postgres              = "2.1.1"
 embedded-postgres-bom          = "17.6.0"
 evas                           = "1.3.0"
-kopy                           = "0.19.0+2.2.20"
+kopy                           = "0.20.0+2.2.21"
 poko                           = "0.20.1"
-mappie                         = "2.2.20-1.6.0"
+mappie                         = "2.2.21-1.6.1"
 akkurate                       = "0.11.0"
-kaml                           = "0.99.0"
+kaml                           = "0.102.0"
 snakeyaml-engine-kmp           = "4.0.1"
 konsist                        = "0.17.3"
 decoroutinator                 = "2.5.7"
@@ -175,11 +187,11 @@ cel                            = "0.11.1"
 kfswatch                       = "1.4.0"
 kmp-process                    = "0.4.0"
 kmbed                          = "1.8.4"
-langchain4j                    = "1.7.1"
-langchain4j-jlama              = "1.7.1-beta14"
+langchain4j                    = "1.8.0"
+langchain4j-jlama              = "1.8.0-beta15"
 langchain4j-kotlin             = "0.3.0"
 jlama                          = "0.8.4"
-mcp-kotlin                     = "0.7.3"
+mcp-kotlin                     = "0.7.4"
 koog                           = "0.5.1"
 mcp4k                          = "0.4.5"
 dflib                          = "2.0.0-M4"
@@ -194,7 +206,7 @@ rwmutex                        = "1.0.0"
 bluesky-ozone                  = "0.3.3"
 cidre                          = "0.3.0"
 voices                         = "0.0.7"
-onnx                           = "1.23.1"
+onnx                           = "1.23.2"
 angus-mail                     = "2.1.0-M1"
 simplemail                     = "8.12.6"
 
@@ -215,6 +227,61 @@ compose-fluent                 = "0.1.0"
 kottie                         = "2.2.0"
 mosaic                         = "0.18.0"
 filekit-dialogs                = "0.12.0"
+
+# NPM Dependencies
+npm-highlightjs                = "11.11.1"
+npm-kotlin-playground          = "1.30.0"
+npm-xtermjs                    = "5.5.0"
+npm-vega-lite                  = "6.2.0"
+npm-jsjoda-tz                  = "2.22.0"
+swagger-style                  = "https://unpkg.com/swagger-ui-themes@3.0.1/themes/3.x/theme-flattop.css"
+
+# Plugin versions
+benmanes                       = "0.53.0"
+caupain                        = "1.6.1"
+foojay-resolver                = "1.0.0"
+gradle-develocity              = "4.2.2"
+nmcp                           = "1.2.0"
+nexus-publish                  = "2.0.0"
+vanniktech-publish             = "0.34.0"
+gradle-publish                 = "2.0.0"
+shadow                         = "9.2.2"
+spotless                       = "8.0.0"
+semver-plugin                  = "0.9.0"
+gratatouille                   = "0.1.2"
+kmpmt                          = "0.1.1"
+tasktree                       = "4.0.1"
+sigstore                       = "2.0.0-rc2"
+reproducible-builds            = "1.1"
+autonomousapps-depanalysis     = "3.3.0"
+autonomousapps-bestpractices   = "0.10"
+graalvm-nativeimage            = "0.11.2"
+github-depgraph                = "0.1.0"
+github-changelog               = "2.2.0"
+buildkonfig                    = "0.17.1"
+gmazzo-buildconfig             = "5.7.0"
+cyclonedx-plugin               = "1.10.0"
+modulegraph                    = "0.13.0"
+exposed-plugin                 = "0.2.1"
+jib-plugin                     = "3.4.5"
+jib-nativeimage-extn           = "0.1.0"
+includegit-plugin              = "0.1.6"
+tomlj                          = "1.1.1"
+animalsniffer                  = "2.0.1"
+badass-runtime                 = "2.0.0"
+badass-jlink                   = "3.1.4-rc"
+jlink-jib                      = "0.5.1"
+jextract                       = "1.0.0"
+maven-plugin-api               = "4.0.0-rc-4"
+maven-plugin-annotations       = "3.15.1"
+gradlex-maven-plugin           = "1.0.3"
+typesafe-conventions           = "0.9.0"
+
+# Repositories
+repo-mvn-central               = "https://repo.maven.apache.org/maven2/"
+repo-mvn-snapshot              = "https://central.sonatype.com/repository/maven-snapshots/"
+repo-mvn-kotlindev             = "https://redirector.kotlinlang.org/maven/dev/"
+repo-nodejs                    = "https://nodejs.org/dist/"
 
 [libraries]
 kotlin-bom                           = { module = "org.jetbrains.kotlin:kotlin-bom"                                 , version.ref = "kotlin"}
@@ -262,9 +329,9 @@ kotlin-redacted-annotations          = { module = "dev.zacsweers.redacted:redact
 kotlin-cryptography-core             = { module = "dev.whyoleg.cryptography:cryptography-core"                      , version.ref = "kotlin-cryptography"}
 kotlin-cryptography-random           = { module = "dev.whyoleg.cryptography:cryptography-random"                    , version.ref = "kotlin-cryptography"}
 kotlin-cryptography-optimal          = { module = "dev.whyoleg.cryptography:cryptography-provider-optimal"          , version.ref = "kotlin-cryptography"}
-jspecify                             = { module = "org.jspecify:jspecify"                                           , version.ref = "jspecify"}
 kotlin-base32                        = { module = "com.osmerion.kotlin:kotlin-base32"                               , version.ref = "kotlin-base32"}
-
+jspecify                             = { module = "org.jspecify:jspecify"                                           , version.ref = "jspecify"}
+kmpmt                                = { module = "com.jakewharton.kmpmt:kmpmt-gradle-plugin"                       , version.ref = "kmpmt" }
 
 ktor-bom                             = { module = "io.ktor:ktor-bom"                                                , version.ref = "ktor"}
 ktor-serialization                   = { module = "io.ktor:ktor-serialization"                                      , version.ref = "ktor"}
@@ -659,3 +726,119 @@ maven-plugin-annotations             = { module = "rg.apache.maven.plugin-tools:
 google-javaformat                    = { module = "com.google.googlejavaformat:google-java-format"                          , version.ref = "google-javaformat" }
 palantir-javaformat                  = { module = "com.palantir.javaformat:palantir-java-format"                            , version.ref = "palantir-javaformat" }
 ktfmt                                = { module = "com.facebook:ktfmt"                                                      , version.ref = "ktfmt" }
+
+
+[bundles]
+ajalt                                = ["ajalt-colormath",
+                                        "ajalt-mordant",
+                                        "ajalt-mordant-coroutines",
+                                        "ajalt-mordant-markdown",
+                                        "ajalt-clikt-core",
+                                        "ajalt-clikt",
+                                        "ajalt-clikt-markdown"]
+dataviz                              = ["kotlinx-dataframe-csv",
+                                        "kotlinx-dataframe-jdbc",
+                                        "kotlinx-dataframe-geo",
+                                        "kotlinx-kandy",
+                                        "kotlinx-kandy-geo"]
+json-extra                           = ["kotlinx-jsonpath","json-schema-validator"]
+keystore                             = ["ayza"]
+otel                                 = ["otel-instr-annotations",
+                                        "otel-semconv",
+                                        "otel-instr-ktor",
+                                        "otel-instr-logback-mdc",
+                                        "otel-instr-logback-appender"]
+otel-agent-extn                      = ["otel-instr-api",
+                                        "otel-instr-extension-api"]
+
+
+[plugins]
+kotlin-multiplatform                 = { id = "org.jetbrains.kotlin.multiplatform"                             , version.ref = "kotlin"}
+kotlin-jvm                           = { id = "org.jetbrains.kotlin.jvm"                                       , version.ref = "kotlin"}
+kotlinx-serialization                = { id = "org.jetbrains.kotlin.plugin.serialization"                      , version.ref = "kotlin"}
+kotlin-powerassert                   = { id = "org.jetbrains.kotlin.plugin.power-assert"                       , version.ref = "kotlin"}
+kotlin-allopen                       = { id = "org.jetbrains.kotlin.plugin.allopen"                            , version.ref = "kotlin"}
+kotlin-noarg                         = { id = "org.jetbrains.kotlin.plugin.noarg"                              , version.ref = "kotlin"}
+kotlin-atomicfu                      = { id = "org.jetbrains.kotlin.plugin.atomicfu"                           , version.ref = "kotlin"}
+kotlin-js-plainobjects               = { id = "org.jetbrains.kotlin.plugin.js-plain-objects"                   , version.ref = "kotlin"}
+kotlin-compose-compiler              = { id = "org.jetbrains.kotlin.plugin.compose"                            , version.ref = "kotlin"}
+kotlin-dsl                           = { id = "org.gradle.kotlin.kotlin-dsl"                                   , version.ref = "gradle-kotlin-dsl"}
+kotlin-ksp                           = { id = "com.google.devtools.ksp"                                        , version.ref = "kotlin-ksp"}
+kotlinx-atomicfu                     = { id = "org.jetbrains.kotlinx.atomicfu"                                 , version.ref = "kotlinx-atomicfu"}
+kotlinx-benchmark                    = { id = "org.jetbrains.kotlinx.benchmark"                                , version.ref = "kotlinx-benchmark" }
+kotlinx-fuzz                         = { id = "kotlinx.fuzz.gradle"                                            , version.ref = "kotlinx-fuzz" }
+kotlinx-rpc                          = { id = "org.jetbrains.kotlinx.rpc.plugin"                               , version.ref = "kotlinx-rpc" }
+kotlinx-kover                        = { id = "org.jetbrains.kotlinx.kover"                                    , version.ref = "kotlinx-kover" }
+jetbrains-compose                    = { id = "org.jetbrains.compose"                                          , version.ref = "jetbrains-compose"}
+jetbrains-compose-hotreload          = { id = "org.jetbrains.compose.hot-reload"                               , version.ref = "compose-hotreload"}
+jetbrains-ktor                       = { id = "io.ktor.plugin"                                                 , version.ref = "ktor" }
+jetbrains-exposed                    = { id = "com.jetbrains.exposed.gradle.plugin"                            , version.ref = "exposed-plugin" }
+jetbrains-dokka                      = { id = "org.jetbrains.dokka"                                            , version.ref = "kotlin-dokka"}
+decoroutinator                       = { id = "dev.reformator.stacktracedecoroutinator"                        , version.ref = "decoroutinator"}
+graalvm-nativeimage                  = { id = "org.graalvm.buildtools.native"                                  , version.ref = "graalvm-nativeimage"}
+serviceloader-compiler               = { id = "app.softwork.serviceloader-compiler"                            , version.ref = "kotlin-serviceloader" }
+exoquery                             = { id = "io.exoquery.exoquery-plugin"                                    , version.ref = "exoquery-plugin" }
+kopy                                 = { id = "com.javiersc.kotlin.kopy"                                       , version.ref = "kopy"}
+chasm                                = { id = "io.github.charlietap.chasm.gradle"                              , version.ref = "chasm-plugin"}
+semver                               = { id = "com.javiersc.semver"                                            , version.ref = "semver-plugin" }
+redacted                             = { id = "dev.zacsweers.redacted"                                         , version.ref = "kotlin-redacted"}
+gradle-develocity                    = { id = "com.gradle.develocity"                                          , version.ref = "gradle-develocity" }
+mrjar                                = { id = "me.champeau.mrjar"                                              , version.ref = "mrjar"}
+nexus-publish                        = { id = "io.github.gradle-nexus.publish-plugin"                          , version.ref = "nexus-publish"}
+jte                                  = { id = "gg.jte.gradle"                                                  , version.ref = "jte" }
+benmanes                             = { id = "com.github.ben-manes.versions"                                  , version.ref = "benmanes" }
+caupain                              = { id = "com.deezer.caupain"                                             , version.ref = "caupain" }
+spotless                             = { id = "com.diffplug.spotless"                                          , version.ref = "spotless" }
+shadow                               = { id = "com.gradleup.shadow"                                            , version.ref = "shadow" }
+jib                                  = { id = "com.google.cloud.tools.jib"                                     , version.ref = "jib-plugin" }
+sigstore                             = { id = "dev.sigstore.sign"                                              , version.ref = "sigstore" }
+sigstore-base                        = { id = "dev.sigstore.sign-base"                                         , version.ref = "sigstore" }
+buildkonfig                          = { id = "com.codingfeline.buildkonfig"                                   , version.ref = "buildkonfig"}
+detekt                               = { id = "dev.detekt"                                                     , version.ref = "detekt"}
+nmcp-project                         = { id = "com.gradleup.nmcp"                                              , version.ref = "nmcp"}
+nmcp-aggregation                     = { id = "com.gradleup.nmcp.aggregation"                                  , version.ref = "nmcp"}
+vanniktech-publish                   = { id = "com.vanniktech.maven.publish"                                   , version.ref = "vanniktech-publish" }
+gradle-publish                       = { id = "com.gradle.plugin-publish"                                      , version.ref = "gradle-publish" }
+kobweb-application                   = { id = "com.varabyte.kobweb.application"                                , version.ref = "kobweb" }
+kobweb-library                       = { id = "com.varabyte.kobweb.library"                                    , version.ref = "kobweb" }
+kobwebx-markdown                     = { id = "com.varabyte.kobwebx.markdown"                                  , version.ref = "kobweb" }
+kobwebx-worker                       = { id = "com.varabyte.kobweb.worker"                                     , version.ref = "kobweb" }
+spring-boot                          = { id = "org.springframework.boot"                                       , version.ref = "spring-boot" }
+spring-depmgmt                       = { id = "io.spring.dependency-management"                                , version.ref = "spring-depmgmt" }
+mappie                               = { id = "tech.mappie.plugin"                                             , version.ref = "mappie" }
+poko                                 = { id = "dev.drewhamilton.poko"                                          , version.ref = "poko" }
+animalsniffer                        = { id = "ru.vyarus.animalsniffer"                                        , version.ref = "animalsniffer"}
+kmbed-plugin                         = { id = "io.karma.kmbed.kmbed-gradle-plugin"                             , version.ref = "kmbed" }
+badass-jlink                         = { id = "org.beryx.jlink"                                                , version.ref = "badass-jlink" }
+badass-runtime                       = { id = "org.beryx.runtime"                                              , version.ref = "badass-runtime" }
+jlink-jib                            = { id = "com.ryandens.jlink-jib"                                         , version.ref = "jlink-jib" }
+jextract                             = { id = "de.infolektuell.jextract"                                       , version.ref = "jextract" }
+gradlex-maven-plugin                 = { id = "org.gradlex.maven-plugin-development"                           , version.ref = "gradlex-maven-plugin" }
+typesafe-conventions                 = { id = "dev.panuszewski.typesafe-conventions"                           , version.ref = "typesafe-conventions" }
+wasm2class                           = { id = "at.released.wasm2class.plugin"                                  , version.ref = "wasm2class" }
+mcp4k                                = { id = "sh.ondr.mcp4k"                                                  , version.ref = "mcp4k"}
+tasktree                             = { id = "com.dorongold.task-tree"                                        , version.ref = "tasktree" }
+foojay-resolver                      = { id = "org.gradle.toolchains.foojay-resolver"                          , version.ref = "foojay-resolver" }
+gratatouille                         = { id = "com.gradleup.gratatouille"                                      , version.ref = "gratatouille" }
+cyclonedx                            = { id = "org.cyclonedx.cyclonedx"                                        , version.ref = "cyclonedx-plugin" }
+github-depgraph                      = { id = "org.gradle.github-dependency-graph"                             , version.ref = "github-depgraph"}
+gmazzo-buildconfig                   = { id = "com.github.gmazzo.buildconfig"                                  , version.ref = "gmazzo-buildconfig"}
+mokkery                              = { id = "dev.mokkery"                                                    , version.ref = "mokkery"}
+modulegraph                          = { id = "dev.iurysouza.modulegraph"                                      , version.ref = "modulegraph"}
+github-changelog                     = { id = "org.hildan.github.changelog"                                    , version.ref = "github-changelog" }
+includegit                           = { id = "me.champeau.gradle.includegit"                                  , version.ref = "includegit-plugin" }
+reproducible-builds                  = { id = "org.gradlex.reproducible-builds"                                , version.ref = "reproducible-builds" }
+autonomousapps-depanalysis           = { id = "com.autonomousapps.dependency-analysis"                         , version.ref = "autonomousapps-depanalysis" }
+autonomousapps-bestpractices         = { id = "com.autonomousapps.plugin-best-practices-plugin"                , version.ref = "autonomousapps-bestpractices" }
+
+# Common build and settings plugins
+project-root                         = { id = "dev.suresh.plugin.root"                                         , version.ref = "bc-plugins" }
+project-common                       = { id = "dev.suresh.plugin.common"                                       , version.ref = "bc-plugins" }
+project-graalvm                      = { id = "dev.suresh.plugin.graalvm"                                      , version.ref = "bc-plugins" }
+project-kotlin-jvm                   = { id = "dev.suresh.plugin.kotlin.jvm"                                   , version.ref = "bc-plugins" }
+project-kotlin-mpp                   = { id = "dev.suresh.plugin.kotlin.mpp"                                   , version.ref = "bc-plugins" }
+project-kotlin-docs                  = { id = "dev.suresh.plugin.kotlin.docs"                                  , version.ref = "bc-plugins" }
+project-kotlin-benchmark             = { id = "dev.suresh.plugin.kotlin.benchmark"                             , version.ref = "bc-plugins" }
+project-publishing                   = { id = "dev.suresh.plugin.publishing"                                   , version.ref = "bc-plugins" }
+settings-repos                       = { id = "dev.suresh.plugin.repos"                                        , version.ref = "bc-plugins" }
+settings-catalog                     = { id = "dev.suresh.plugin.catalog"                                      , version.ref = "bc-plugins" }

@@ -126,7 +126,6 @@ class SvipClient : AutoCloseable {
         """
             .trimIndent()
 
-    println(requestXml)
     val res =
         client
             .post("https://services.vip.symantec.com/prov") { setBody(requestXml) }
