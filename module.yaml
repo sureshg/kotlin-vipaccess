@@ -1,6 +1,6 @@
 product:
-  type: jvm/app
-  platforms: [ jvm ]
+  type: macos/app
+  platforms: [ macosArm64 ]
 
 settings:
   kotlin:
@@ -68,10 +68,12 @@ dependencies:
   - $libs.kotlin.cryptography.core
   - $libs.kotlin.cryptography.optimal
   - $libs.kotlin.base32
-  - $libs.slf4j.simple
 
 dependencies@native:
   - $libs.ktor.client.curl
+
+dependencies@jvm:
+  - $libs.slf4j.simple
 
 test-dependencies:
   - $libs.kotlin.test

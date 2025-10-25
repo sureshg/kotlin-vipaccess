@@ -4,7 +4,7 @@ import dev.whyoleg.cryptography.algorithms.SHA256
 import io.github.oshai.kotlinlogging.KotlinLogging
 import io.ktor.client.*
 import io.ktor.client.call.body
-import io.ktor.client.engine.cio.*
+import io.ktor.client.engine.curl.*
 import io.ktor.client.plugins.*
 import io.ktor.client.plugins.compression.*
 import io.ktor.client.plugins.contentnegotiation.*
@@ -23,6 +23,14 @@ import nl.adaptivity.xmlutil.XmlDeclMode
 import nl.adaptivity.xmlutil.serialization.XML
 
 class SvipClient : AutoCloseable {
+  val VERIFY_URL = "https://vip.symantec.com/otpCheck"
+
+  private val CLIENT_ID = "kotlin-svip-access-1.0.0"
+
+  private val HMAC_KEY =
+      "dd0ba692c38aa3a993a3aa26968cd9c2aa2aa2cb23b7c2d2aaaf8f8fc9a0a9a1".hexToByteArray()
+
+  private val TOKEN_ENCRYPTION_KEY = "01ad9bc682a3aa93a9a3239a86d6ccd9".hexToByteArray()
 
   private val log = KotlinLogging.logger {}
 
@@ -37,7 +45,7 @@ class SvipClient : AutoCloseable {
   }
 
   private val client =
-      HttpClient(CIO) {
+      HttpClient(Curl) {
         install(ContentNegotiation) { xml(xml) }
         install(ContentEncoding) {
           deflate(1.0F)
@@ -89,16 +97,8 @@ class SvipClient : AutoCloseable {
 
   suspend fun provision(tokenModel: String = "SYMC", verify: Boolean = false): String {
     log.info { "Provisioning Semantic VIP credential (model: $tokenModel)" }
-
-    val hexFormat = HexFormat {
-      upperCase = true
-      number { removeLeadingZeros = true }
-    }
-
     val timestamp = Clock.System.now().epochSeconds
-    val clientId = "$tokenModel ${timestamp.toHexString(hexFormat)}"
-
-    val data = "$timestamp${timestamp}BOARDID${clientId}Symantec"
+    val data = "$timestamp${timestamp}BOARDID${CLIENT_ID}Symantec"
     val hmacSha256 =
         CryptographyProvider.Default.get(HMAC).keyDecoder(SHA256).decodeFromByteArray(RAW, HMAC_KEY)
     val signedData = hmacSha256.signatureGenerator().generateSignature(data.encodeToByteArray())
@@ -117,7 +117,7 @@ class SvipClient : AutoCloseable {
                  xmlns:vip="http://www.verisign.com/2006/08/vipservice">
                  <AppHandle>iMac010200</AppHandle>
                  <ClientIDType>BOARDID</ClientIDType>
-                 <ClientID>$clientId</ClientID>
+                 <ClientID>$CLIENT_ID</ClientID>
                  <DistChannel>Symantec</DistChannel>
                  <ClientTimestamp>$timestamp</ClientTimestamp>
                  <Data>${Base64.encode(signedData)}</Data>
@@ -127,21 +127,13 @@ class SvipClient : AutoCloseable {
             .trimIndent()
 
     println(requestXml)
-    val res = client.post(PROVISIONING_URL) { setBody(requestXml) }.body<GetSharedSecretResponse>()
+    val res =
+        client
+            .post("https://services.vip.symantec.com/prov") { setBody(requestXml) }
+            .body<GetSharedSecretResponse>()
     log.info { "Provisioning response: $res" }
     return requestXml
   }
 
   override fun close() = client.close()
-
-  companion object {
-    const val PROVISIONING_URL = "https://services.vip.symantec.com/prov"
-
-    const val VERIFY_URL = "https://vip.symantec.com/otpCheck"
-
-    val HMAC_KEY =
-        "dd0ba692c38aa3a993a3aa26968cd9c2aa2aa2cb23b7c2d2aaaf8f8fc9a0a9a1".hexToByteArray()
-
-    val TOKEN_ENCRYPTION_KEY = "01ad9bc682a3aa93a9a3239a86d6ccd9".hexToByteArray()
-  }
 }
