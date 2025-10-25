@@ -3,6 +3,26 @@ import kotlinx.serialization.Serializable
 import nl.adaptivity.xmlutil.serialization.XmlElement
 import nl.adaptivity.xmlutil.serialization.XmlValue
 
+/**
+ * XML Serialization Quick Reference
+ *
+ * **Attribute by default:**
+ * - Scalar types (`String`, `Boolean`, `Int`, `Long`, etc.) on a class, without `@XmlElement(true)`
+ *
+ * **Element by default:**
+ * - Nested objects (e.g., `status`, `secretContainer`, `usage`, `digest`)
+ * - Collections
+ *
+ * **Element forced:**
+ * - Any property with `@XmlElement(true)` regardless of being scalar
+ *
+ * **Name mapping:**
+ * - Use `@SerialName("XMLName")` to match exact XML names (case-sensitive)
+ *
+ * **Namespace:**
+ * - Controlled at class level with `@XmlSerialName` when needed
+ * - Currently using `ignoreNamespaces()`, so namespace annotation is optional
+ */
 @Serializable
 data class GetSharedSecretResponse(
     @SerialName("RequestId") val requestId: String,
