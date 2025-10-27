@@ -1,10 +1,8 @@
 import com.kgit2.kommand.process.Command
 import com.kgit2.kommand.process.Stdio
 import kotlinx.cinterop.toKString
-import kotlinx.cinterop.usePinned
 import kotlinx.coroutines.runBlocking
 import platform.posix.getenv
-import kotlin.time.Clock
 
 fun main() = runBlocking {
 

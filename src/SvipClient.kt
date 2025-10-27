@@ -3,7 +3,7 @@ import dev.whyoleg.cryptography.algorithms.HMAC
 import dev.whyoleg.cryptography.algorithms.SHA256
 import io.github.oshai.kotlinlogging.KotlinLogging
 import io.ktor.client.*
-import io.ktor.client.call.body
+import io.ktor.client.call.*
 import io.ktor.client.engine.curl.*
 import io.ktor.client.plugins.*
 import io.ktor.client.plugins.compression.*
@@ -11,17 +11,15 @@ import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.client.plugins.logging.*
 import io.ktor.client.plugins.logging.LogLevel.*
 import io.ktor.client.plugins.logging.LoggingFormat.*
-import io.ktor.client.request.post
-import io.ktor.client.request.setBody
+import io.ktor.client.request.*
 import io.ktor.http.*
 import io.ktor.serialization.kotlinx.xml.*
 import io.ktor.util.*
+import nl.adaptivity.xmlutil.XmlDeclMode
+import nl.adaptivity.xmlutil.serialization.XML
 import kotlin.io.encoding.Base64
 import kotlin.time.Clock
 import kotlin.time.Duration.Companion.seconds
-import nl.adaptivity.xmlutil.XmlDeclMode
-import nl.adaptivity.xmlutil.serialization.XML
-import kotlin.native.concurrent.Worker
 
 class SvipClient : AutoCloseable {
   val VERIFY_URL = "https://vip.symantec.com/otpCheck"
