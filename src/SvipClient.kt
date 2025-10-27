@@ -21,6 +21,7 @@ import kotlin.time.Clock
 import kotlin.time.Duration.Companion.seconds
 import nl.adaptivity.xmlutil.XmlDeclMode
 import nl.adaptivity.xmlutil.serialization.XML
+import kotlin.native.concurrent.Worker
 
 class SvipClient : AutoCloseable {
   val VERIFY_URL = "https://vip.symantec.com/otpCheck"

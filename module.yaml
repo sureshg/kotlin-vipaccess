@@ -68,6 +68,7 @@ dependencies:
   - $libs.kotlin.cryptography.core
   - $libs.kotlin.cryptography.optimal
   - $libs.kotlin.base32
+  - "com.kgit2:kommand:2.3.0"
 
 dependencies@native:
   - $libs.ktor.client.curl
