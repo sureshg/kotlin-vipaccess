@@ -28,9 +28,7 @@ data class GetSharedSecretResponse(
     @SerialName("RequestId") val requestId: String,
     @SerialName("Version") val version: String,
     val status: Status,
-    @XmlElement(true)
-    @SerialName("SharedSecretDeliveryMethod")
-    val sharedSecretDeliveryMethod: String,
+    @XmlElement(true) @SerialName("SharedSecretDeliveryMethod") val sharedSecretDeliveryMethod: String,
     val secretContainer: SecretContainer,
     @XmlElement(true) @SerialName("UTCTimestamp") val utcTimestamp: Long,
 )
@@ -55,7 +53,8 @@ data class EncryptionMethod(
     @XmlElement(true) @SerialName("IV") val iv: String,
 )
 
-@Serializable data class Device(@SerialName("Secret") val secret: Secret)
+@Serializable
+data class Device(@SerialName("Secret") val secret: Secret)
 
 @Serializable
 data class Secret(
@@ -89,4 +88,14 @@ data class Data(@XmlElement(true) @SerialName("Cipher") val cipher: String, val 
 data class Digest(
     val algorithm: String, // attr "algorithm"
     @XmlValue val value: String,
+)
+
+@Serializable
+data class Token(
+    val id: String,
+    val base64Secret: String,
+    val period: Int = 30,
+    val counter: Int? = null,
+    val algorithm: String = "sha1",
+    val digits: Int = 6
 )
