@@ -1,10 +1,10 @@
 product:
-  type: macos/app
-  platforms: [ macosArm64 ]
+  type: jvm/app
+#  platforms: [ macosArm64 ]
 
 settings:
   kotlin:
-    version: 2.3.0-Beta1
+    version: 2.3.0-Beta2
     languageVersion: 2.3
     apiVersion: 2.3
     progressiveMode: true
@@ -15,7 +15,6 @@ settings:
       - -Wextra
       - -Xcontext-parameters
       - -Xexpect-actual-classes
-      - -Xskip-prerelease-check
       - -Xwhen-guards
       - -Xmulti-dollar-interpolation
       - -Xnon-local-break-continue
@@ -24,6 +23,9 @@ settings:
       - -Xreturn-value-checker=check
       - -Xcontext-sensitive-resolution
       - -Xannotation-default-target=param-property
+      - -Xdata-flow-based-exhaustiveness
+    # - -Xannotation-target-all
+    # - -Xskip-prerelease-check
     # - -Xsuppress-warning=CAN_BE_VAL
     optIns:
       - kotlin.ExperimentalStdlibApi
@@ -36,6 +38,7 @@ settings:
       - kotlin.ExperimentalMultiplatform
       - kotlin.uuid.ExperimentalUuidApi
       - kotlin.concurrent.atomics.ExperimentalAtomicApi
+      - dev.whyoleg.cryptography.DelicateCryptographyApi
 
     serialization:
       version: 1.9.0
@@ -68,7 +71,7 @@ dependencies:
   - $libs.kotlin.cryptography.core
   - $libs.kotlin.cryptography.optimal
   - $libs.kotlin.base32
-  - "com.kgit2:kommand:2.3.0"
+  - $libs.kommand
 
 dependencies@native:
   - $libs.ktor.client.curl
