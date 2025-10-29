@@ -1,101 +1,84 @@
-import kotlinx.serialization.SerialName
+@file:Suppress("PropertyName")
+
+import kotlin.time.Clock
 import kotlinx.serialization.Serializable
 import nl.adaptivity.xmlutil.serialization.XmlElement
 import nl.adaptivity.xmlutil.serialization.XmlValue
 
-/**
- * XML Serialization Quick Reference
- *
- * **Attribute by default:**
- * - Scalar types (`String`, `Boolean`, `Int`, `Long`, etc.) on a class, without `@XmlElement(true)`
- *
- * **Element by default:**
- * - Nested objects (e.g., `status`, `secretContainer`, `usage`, `digest`)
- * - Collections
- *
- * **Element forced:**
- * - Any property with `@XmlElement(true)` regardless of being scalar
- *
- * **Name mapping:**
- * - Use `@SerialName("XMLName")` to match exact XML names (case-sensitive)
- *
- * **Namespace:**
- * - Controlled at class level with `@XmlSerialName` when needed
- * - Currently using `ignoreNamespaces()`, so namespace annotation is optional
- */
 @Serializable
 data class GetSharedSecretResponse(
-    @SerialName("RequestId") val requestId: String,
-    @SerialName("Version") val version: String,
-    val status: Status,
-    @XmlElement(true) @SerialName("SharedSecretDeliveryMethod") val sharedSecretDeliveryMethod: String,
-    val secretContainer: SecretContainer,
-    @XmlElement(true) @SerialName("UTCTimestamp") val utcTimestamp: Long,
+    val RequestId: String,
+    val Version: String,
+    val Status: Status,
+    @XmlElement(true) val SharedSecretDeliveryMethod: String,
+    val SecretContainer: SecretContainer,
+    @XmlElement(true) val UTCTimestamp: Long,
 )
 
 @Serializable
 data class Status(
-    @XmlElement(true) @SerialName("ReasonCode") val reasonCode: String,
-    @XmlElement(true) @SerialName("StatusMessage") val statusMessage: String,
+    @XmlElement(true) val ReasonCode: String,
+    @XmlElement(true) val StatusMessage: String,
 )
 
 @Serializable
 data class SecretContainer(
-    @SerialName("Version") val version: String,
-    val encryptionMethod: EncryptionMethod,
-    val device: Device,
+    val Version: String,
+    val EncryptionMethod: EncryptionMethod,
+    val Device: Device,
 )
 
 @Serializable
 data class EncryptionMethod(
-    @XmlElement(true) @SerialName("PBESalt") val pbeSalt: String,
-    @XmlElement(true) @SerialName("PBEIterationCount") val pbeIterationCount: Int,
-    @XmlElement(true) @SerialName("IV") val iv: String,
+    @XmlElement(true) val PBESalt: String,
+    @XmlElement(true) val PBEIterationCount: Int,
+    @XmlElement(true) val IV: String,
 )
 
-@Serializable
-data class Device(@SerialName("Secret") val secret: Secret)
+@Serializable data class Device(val Secret: Secret)
 
 @Serializable
 data class Secret(
-    val type: String, // attr "type"
-    @SerialName("Id") val id: String, // attr "Id"
-    @XmlElement(true) @SerialName("Issuer") val issuer: String,
-    val usage: Usage,
-    @XmlElement(true) @SerialName("FriendlyName") val friendlyName: String,
-    @SerialName("Data") val data: Data,
-    @XmlElement(true) @SerialName("Expiry") val expiry: String,
+    val type: String,
+    val Id: String,
+    @XmlElement(true) val Issuer: String,
+    val Usage: Usage,
+    @XmlElement(true) val FriendlyName: String,
+    val Data: Data,
+    @XmlElement(true) val Expiry: String,
 )
 
 @Serializable
 data class Usage(
-    val otp: Boolean, // attr "otp"
-    val ai: AI, // element name from type "AI"
-    @XmlElement(true) @SerialName("TimeStep") val timeStep: Int,
-    @XmlElement(true) @SerialName("Time") val time: Long,
-    @XmlElement(true) @SerialName("ClockDrift") val clockDrift: Int,
+    val otp: Boolean,
+    val AI: AI,
+    @XmlElement(true) val TimeStep: Int,
+    @XmlElement(true) val Time: Long,
+    @XmlElement(true) val ClockDrift: Int,
 )
 
-@Serializable
-data class AI(
-    val type: String // attr "type"
-)
+@Serializable data class AI(val type: String)
 
-@Serializable
-data class Data(@XmlElement(true) @SerialName("Cipher") val cipher: String, val digest: Digest)
+@Serializable data class Data(@XmlElement(true) val Cipher: String, val Digest: Digest)
 
-@Serializable
-data class Digest(
-    val algorithm: String, // attr "algorithm"
-    @XmlValue val value: String,
-)
+@Serializable data class Digest(val algorithm: String, @XmlValue val value: String)
 
 @Serializable
 data class Token(
     val id: String,
-    val base64Secret: String,
+    val secret: String,
     val period: Int = 30,
     val counter: Int? = null,
     val algorithm: String = "sha1",
-    val digits: Int = 6
-)
+    val digits: Int = 6,
+) {
+  /** Gets the remaining seconds until the current OTP expires. */
+  val remainingSeconds = period - (Clock.System.now().epochSeconds % period).toInt()
+}
+
+/** Token validation/sync result */
+enum class TokenResult {
+  SUCCESS,
+  NEEDS_SYNC,
+  FAILED,
+}
