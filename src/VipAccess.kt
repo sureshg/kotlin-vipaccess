@@ -156,7 +156,7 @@ class VipAccess(val clientId: String = "kotlin-vipaccess") : AutoCloseable {
 
   private suspend fun decryptAes(cipherText: ByteArray, iv: ByteArray): ByteArray {
     val key = aes.keyDecoder().decodeFromByteArray(RAW, AES_KEY)
-    return key.cipher().decryptWithIv(iv = iv, ciphertext = cipherText)
+    return key.cipher(padding = true).decryptWithIv(iv = iv, ciphertext = cipherText)
   }
 
   /**
