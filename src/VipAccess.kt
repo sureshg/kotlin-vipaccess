@@ -25,7 +25,7 @@ import kotlinx.io.readByteArray
 import nl.adaptivity.xmlutil.XmlDeclMode
 import nl.adaptivity.xmlutil.serialization.XML
 
-class VipAccess(val clientId: String = "kotlin-svip-access") : AutoCloseable {
+class VipAccess(val clientId: String = "kotlin-vipaccess") : AutoCloseable {
 
   private val log = KotlinLogging.logger {}
 
