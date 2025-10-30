@@ -73,12 +73,14 @@ data class Token(
     val digits: Int = 6,
 ) {
   /** Gets the remaining seconds until the current OTP expires. */
-  val remainingSeconds = period - (Clock.System.now().epochSeconds % period).toInt()
+  val remainingSeconds
+    get() = period - (Clock.System.now().epochSeconds % period).toInt()
 }
 
-/** Token validation/sync result */
-enum class TokenResult {
-  SUCCESS,
-  NEEDS_SYNC,
-  FAILED,
+sealed class TokenResult(val res: String) {
+  data object Success : TokenResult("VIP Credential is working correctly")
+
+  data object NeedsSync : TokenResult("VIP credential needs to be sync")
+
+  data class Failed(val error: String) : TokenResult("")
 }

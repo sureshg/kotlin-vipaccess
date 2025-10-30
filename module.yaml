@@ -1,6 +1,6 @@
 product:
-  type: jvm/app
-#  platforms: [ macosArm64 ]
+  type: lib
+  platforms: [ jvm, linuxArm64, linuxX64, macosX64, macosArm64, mingwX64, js, wasmJs ]
 
 settings:
   kotlin:
@@ -71,7 +71,6 @@ dependencies:
   - $libs.kotlin.cryptography.core
   - $libs.kotlin.cryptography.optimal
   - $libs.kotlin.base32
-  - $libs.kommand
 
 dependencies@native:
   - $libs.ktor.client.curl
