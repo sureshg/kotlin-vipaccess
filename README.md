@@ -34,19 +34,6 @@ when (client.verifyToken(token)) {
 println("URI: ${client.otpUri(token)}")
 ```
 
-### Installation
-
-```yaml
-# Amper
-dependencies:
-  - dev.suresh:kotlin-vipaccess:1.0.0
-```
-
-```kotlin
-// Gradle
-implementation("dev.suresh:kotlin-vipaccess:1.0.0")
-```
-
 ### Build
 
 ```bash
