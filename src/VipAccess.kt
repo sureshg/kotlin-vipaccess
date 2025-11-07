@@ -33,9 +33,18 @@ class VipAccess(val clientId: String = "kotlin-vipaccess") : AutoCloseable {
 
   private val aes = CryptographyProvider.Default.get(AES.CBC)
 
+  /**
+   * Publicly known HMAC-SHA256 key used by all VIP Access clients to sign provisioning requests.
+   * Extracted from Symantec's official client.
+   */
   private val HMAC_KEY =
       "dd0ba692c38aa3a993a3aa26968cd9c2aa2aa2cb23b7c2d2aaaf8f8fc9a0a9a1".hexToByteArray()
 
+  /**
+   * Publicly known AES-128 key used by all VIP Access clients to decrypt OTP secrets from
+   * provisioning responses. The security comes from the server-generated random secret, not this
+   * transport encryption key.
+   */
   private val AES_KEY = "01ad9bc682a3aa93a9a3239a86d6ccd9".hexToByteArray()
 
   private val xml = XML {
