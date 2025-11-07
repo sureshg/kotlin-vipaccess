@@ -2,7 +2,7 @@
 kotlin                         = "2.3.0-Beta2"
 kotlinx-coroutines             = "1.10.2"
 kotlinx-serialization          = "1.9.0"
-ktor                           = "3.3.2 "
+ktor                           = "3.3.2"
 kotlin-logging                 = "7.0.13"
 kotlin-cryptography            = "0.5.0"
 kotlin-base32                  = "1.0.0"
