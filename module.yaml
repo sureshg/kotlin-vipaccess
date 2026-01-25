@@ -3,11 +3,24 @@ product:
   platforms: [ jvm, linuxArm64, linuxX64, macosX64, macosArm64, mingwX64, js, wasmJs ]
 
 settings:
+  publishing:
+    enabled: true
+    group: dev.suresh.vipaccess
+    version: 1.0.0-SNAPSHOT
+
+  jvm:
+    release: 25
+    storeParameterNames: true
+    jdk:
+      version: 25
+      distributions: [ oracleOpenJdk, zulu ]
+
   kotlin:
-    version: 2.3.0-Beta2
+    version: 2.3.0
     languageVersion: 2.3
     apiVersion: 2.3
     progressiveMode: true
+    powerAssert: enabled
     allWarningsAsErrors: false
     suppressWarnings: false
     verbose: false
@@ -24,6 +37,8 @@ settings:
       - -Xcontext-sensitive-resolution
       - -Xannotation-default-target=param-property
       - -Xdata-flow-based-exhaustiveness
+      - -Xexplicit-backing-fields
+      - -Xconsistent-data-class-copy-visibility
     # - -Xannotation-target-all
     # - -Xskip-prerelease-check
     # - -Xsuppress-warning=CAN_BE_VAL
@@ -41,7 +56,7 @@ settings:
       - dev.whyoleg.cryptography.DelicateCryptographyApi
 
     serialization:
-      version: 1.9.0
+      version: 1.10.0
       format: json
 
 settings@native:
