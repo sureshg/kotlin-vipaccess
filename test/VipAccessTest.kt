@@ -40,7 +40,7 @@ class VipAccessTest {
     when (vipAccess.verifyToken(token)) {
       is TokenResult.Success -> return@runTest
       is TokenResult.NeedsSync -> {
-        vipAccess.syncToken(token)
+        val _ = vipAccess.syncToken(token)
         assertTrue(vipAccess.verifyToken(token) is TokenResult.Success)
       }
       is TokenResult.Failed -> fail("Token verification failed")

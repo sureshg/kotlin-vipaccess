@@ -1,47 +1,45 @@
+repositories:
+  - id: mavenLocal
+    url: mavenLocal
+    resolve: false
+    publish: true
+
 product:
-  type: lib
-  platforms: [ jvm, linuxArm64, linuxX64, macosX64, macosArm64, mingwX64, js, wasmJs ]
+  type: kmp/lib
+  platforms: [ jvm, linuxArm64, linuxX64, macosArm64, mingwX64, js, wasmJs ]
 
 settings:
-  publishing:
-    enabled: true
-    group: dev.suresh.vipaccess
-    version: 1.0.0-SNAPSHOT
-
   jvm:
     release: 25
     storeParameterNames: true
+
     jdk:
       version: 25
-      distributions: [ oracleOpenJdk, zulu ]
+      distributions: [ zulu, temurin ]
+
+    test:
+      junitPlatformVersion: 6.1.0
+      freeJvmArgs:
+        - --enable-native-access=ALL-UNNAMED
+        - -Djunit.platform.reporting.open.xml.enabled=true
 
   kotlin:
-    version: 2.3.0
-    languageVersion: 2.3
-    apiVersion: 2.3
+    version: 2.4.0-RC
+    languageVersion: 2.4
+    apiVersion: 2.4
     progressiveMode: true
-    powerAssert: enabled
-    allWarningsAsErrors: false
+    allWarningsAsErrors: true
     suppressWarnings: false
+    powerAssert: enabled
     verbose: false
     freeCompilerArgs:
       - -Wextra
-      - -Xcontext-parameters
-      - -Xexpect-actual-classes
-      - -Xwhen-guards
-      - -Xmulti-dollar-interpolation
-      - -Xnon-local-break-continue
-      - -Xnested-type-aliases
+      - -Xcollection-literals
       - -Xreport-all-warnings
-      - -Xreturn-value-checker=check
+      - -Xreturn-value-checker=full
       - -Xcontext-sensitive-resolution
-      - -Xannotation-default-target=param-property
-      - -Xdata-flow-based-exhaustiveness
-      - -Xexplicit-backing-fields
       - -Xconsistent-data-class-copy-visibility
-    # - -Xannotation-target-all
-    # - -Xskip-prerelease-check
-    # - -Xsuppress-warning=CAN_BE_VAL
+      - -Xname-based-destructuring=complete
     optIns:
       - kotlin.ExperimentalStdlibApi
       - kotlin.ExperimentalUnsignedTypes
@@ -56,8 +54,29 @@ settings:
       - dev.whyoleg.cryptography.DelicateCryptographyApi
 
     serialization:
-      version: 1.10.0
+      version: 1.11.0
       format: json
+
+  publishing:
+    enabled: true
+    group: dev.suresh.vipaccess
+    version: 1.0.0-SNAPSHOT
+    signArtifacts: true
+    publishSources: true
+    pom:
+      url: https://github.com/sureshg/kotlin-vipaccess
+      description: KMP library for Symantec VIP Access protocol
+      licenses:
+        - name: The Apache License, Version 2.0
+          url: https://www.apache.org/licenses/LICENSE-2.0.txt
+      developers:
+        - id: suresh
+          name: Suresh
+          email: email@suresh.dev
+          organization: suresh.dev
+          organizationUrl: https://suresh.dev
+      scm:
+        url: https://github.com/sureshg/kotlin-vipaccess
 
 settings@native:
   kotlin:

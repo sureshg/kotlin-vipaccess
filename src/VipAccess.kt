@@ -146,7 +146,7 @@ class VipAccess(val clientId: String = "kotlin-vipaccess") : AutoCloseable {
     val iv = Base64.decode(res.SecretContainer.EncryptionMethod.IV)
     val cipher = Base64.decode(secret.Data.Cipher)
 
-    val (_, algo, _, digitsStr) = secret.Usage.AI.type.split("-")
+    val [_, algo, _, digitsStr] = secret.Usage.AI.type.split("-")
     require(digitsStr.endsWith("DIGITS")) { "Unknown algorithm: ${secret.Usage.AI.type}" }
 
     return Token(

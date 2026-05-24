@@ -1,7 +1,7 @@
 # Mac OSX
 .DS_Store
 
-# IntelliJ IDEA
+# JetBrains
 .idea/
 *.iml
 out/
@@ -15,6 +15,15 @@ jre/
 
 # Kotlin
 **/.kotlin
+*.class
 
-# Amper
+# Kotlin Toolchain
 build/
+
+# AI Agents & Tools
+.junie/
+.claude/
+CLAUDE.local.md
+.codex/
+.cursor/
+.env

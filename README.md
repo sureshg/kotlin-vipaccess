@@ -39,7 +39,7 @@ println("URI: ${client.otpUri(token)}")
 ```bash
 $ git clone https://github.com/sureshg/kotlin-vipaccess
 $ cd kotlin-vipaccess
-$ ./amper build
+$ ./kotlin build
 ```
 
 ### Authenticator Setup
