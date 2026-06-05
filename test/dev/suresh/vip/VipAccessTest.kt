@@ -1,3 +1,5 @@
+package dev.suresh.vip
+
 import kotlin.test.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.test.runTest

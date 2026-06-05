@@ -1,5 +1,7 @@
-import TokenResult.*
+package dev.suresh.vip
+
 import com.osmerion.kotlin.io.encoding.Base32
+import dev.suresh.vip.TokenResult.*
 import dev.whyoleg.cryptography.CryptographyProvider
 import dev.whyoleg.cryptography.algorithms.AES
 import dev.whyoleg.cryptography.algorithms.HMAC

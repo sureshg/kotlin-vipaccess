@@ -38,8 +38,8 @@ jobs:
       - name: 🅺 Cache Kotlin Toolchain
         uses: sureshg/actions/kotlin-toolchain-cache@v1
 
-      - name: 📦 Package
-        run: ./kotlin package
+      - name: 🏗️ Build
+        run: ./kotlin build
 
       - name: 🔭 Upload build traces
         if: always()

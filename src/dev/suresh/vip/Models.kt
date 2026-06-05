@@ -1,9 +1,11 @@
 @file:Suppress("PropertyName")
 
+package dev.suresh.vip
+
+import kotlin.time.Clock
 import kotlinx.serialization.Serializable
 import nl.adaptivity.xmlutil.serialization.XmlElement
 import nl.adaptivity.xmlutil.serialization.XmlValue
-import kotlin.time.Clock
 
 @Serializable
 public data class GetSharedSecretResponse(
