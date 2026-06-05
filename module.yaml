@@ -8,15 +8,15 @@ product:
   type: kmp/lib
   platforms: [ jvm, linuxArm64, linuxX64, macosArm64, mingwX64, js, wasmJs ]
 
+description: KMP library for Symantec VIP Access protocol
+
 settings:
   jvm:
-    release: 25
+    release: 21
     storeParameterNames: true
-
     jdk:
-      version: 25
+      version: 26
       distributions: [ zulu, temurin ]
-
     test:
       junitPlatformVersion: 6.1.0
       freeJvmArgs:
@@ -24,7 +24,7 @@ settings:
         - -Djunit.platform.reporting.open.xml.enabled=true
 
   kotlin:
-    version: 2.4.0-RC
+    version: 2.4.0
     languageVersion: 2.4
     apiVersion: 2.4
     progressiveMode: true
@@ -33,6 +33,7 @@ settings:
     powerAssert: enabled
     verbose: false
     freeCompilerArgs:
+      - -Xexplicit-api=strict
       - -Wextra
       - -Xcollection-literals
       - -Xreport-all-warnings
@@ -60,30 +61,32 @@ settings:
   publishing:
     enabled: true
     group: dev.suresh.vipaccess
-    version: 1.0.0-SNAPSHOT
+    version: 0.1.0
+    mavenCentral:
+      enabled: true
+      publishingMode: auto
     signArtifacts: true
     publishSources: true
     pom:
       url: https://github.com/sureshg/kotlin-vipaccess
-      description: KMP library for Symantec VIP Access protocol
+      scm: https://github.com/sureshg/kotlin-vipaccess.git
+      developers:
+        - name: Suresh
+          url: https://suresh.dev
       licenses:
         - name: The Apache License, Version 2.0
           url: https://www.apache.org/licenses/LICENSE-2.0.txt
-      developers:
-        - id: suresh
-          name: Suresh
-          email: email@suresh.dev
-          organization: suresh.dev
-          organizationUrl: https://suresh.dev
-      scm:
-        url: https://github.com/sureshg/kotlin-vipaccess
 
 settings@native:
   kotlin:
-    debug: false
     optIns:
       - kotlinx.cinterop.ExperimentalForeignApi
       - kotlin.experimental.ExperimentalNativeApi
+
+test-settings:
+  kotlin:
+    freeCompilerArgs:
+      - -Xexplicit-api=disable
 
 dependencies:
   - bom: $libs.kotlin.bom
@@ -108,9 +111,6 @@ dependencies:
 
 dependencies@native:
   - $libs.ktor.client.curl
-
-dependencies@jvm:
-  - $libs.slf4j.simple
 
 test-dependencies:
   - $libs.kotlin.test

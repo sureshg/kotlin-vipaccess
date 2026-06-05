@@ -1,12 +1,12 @@
 @file:Suppress("PropertyName")
 
-import kotlin.time.Clock
 import kotlinx.serialization.Serializable
 import nl.adaptivity.xmlutil.serialization.XmlElement
 import nl.adaptivity.xmlutil.serialization.XmlValue
+import kotlin.time.Clock
 
 @Serializable
-data class GetSharedSecretResponse(
+public data class GetSharedSecretResponse(
     val RequestId: String,
     val Version: String,
     val Status: Status,
@@ -16,29 +16,29 @@ data class GetSharedSecretResponse(
 )
 
 @Serializable
-data class Status(
+public data class Status(
     @XmlElement(true) val ReasonCode: String,
     @XmlElement(true) val StatusMessage: String,
 )
 
 @Serializable
-data class SecretContainer(
+public data class SecretContainer(
     val Version: String,
     val EncryptionMethod: EncryptionMethod,
     val Device: Device,
 )
 
 @Serializable
-data class EncryptionMethod(
+public data class EncryptionMethod(
     @XmlElement(true) val PBESalt: String,
     @XmlElement(true) val PBEIterationCount: Int,
     @XmlElement(true) val IV: String,
 )
 
-@Serializable data class Device(val Secret: Secret)
+@Serializable public data class Device(val Secret: Secret)
 
 @Serializable
-data class Secret(
+public data class Secret(
     val type: String,
     val Id: String,
     @XmlElement(true) val Issuer: String,
@@ -49,7 +49,7 @@ data class Secret(
 )
 
 @Serializable
-data class Usage(
+public data class Usage(
     val otp: Boolean,
     val AI: AI,
     @XmlElement(true) val TimeStep: Int,
@@ -57,14 +57,14 @@ data class Usage(
     @XmlElement(true) val ClockDrift: Int,
 )
 
-@Serializable data class AI(val type: String)
+@Serializable public data class AI(val type: String)
 
-@Serializable data class Data(@XmlElement(true) val Cipher: String, val Digest: Digest)
+@Serializable public data class Data(@XmlElement(true) val Cipher: String, val Digest: Digest)
 
-@Serializable data class Digest(val algorithm: String, @XmlValue val value: String)
+@Serializable public data class Digest(val algorithm: String, @XmlValue val value: String)
 
 @Serializable
-data class Token(
+public data class Token(
     val id: String,
     val secret: String,
     val period: Int = 30,
@@ -73,14 +73,14 @@ data class Token(
     val digits: Int = 6,
 ) {
   /** Gets the remaining seconds until the current OTP expires. */
-  val remainingSeconds
+  val remainingSeconds: Int
     get() = period - (Clock.System.now().epochSeconds % period).toInt()
 }
 
-sealed class TokenResult(val res: String) {
-  data object Success : TokenResult("VIP Credential is working correctly")
+public sealed class TokenResult(public val res: String) {
+  public data object Success : TokenResult("VIP Credential is working correctly")
 
-  data object NeedsSync : TokenResult("VIP credential needs to be sync")
+  public data object NeedsSync : TokenResult("VIP credential needs to be sync")
 
-  data class Failed(val error: String) : TokenResult("")
+  public data class Failed(val error: String) : TokenResult("")
 }

@@ -1,9 +1,9 @@
 [versions]
-kotlin                         = "2.4.0-RC"
+kotlin                         = "2.4.0"
 kotlinx-coroutines             = "1.11.0"
 kotlinx-serialization          = "1.11.0"
 ktor                           = "3.5.0"
-kotlin-logging                 = "8.0.03"
+kotlin-logging                 = "8.0.4"
 kotlin-cryptography            = "0.6.0"
 kotlin-base32                  = "1.0.1"
 slf4j                          = "2.1.0-alpha1"

@@ -1,7 +1,10 @@
 import TokenResult.*
 import com.osmerion.kotlin.io.encoding.Base32
-import dev.whyoleg.cryptography.*
-import dev.whyoleg.cryptography.algorithms.*
+import dev.whyoleg.cryptography.CryptographyProvider
+import dev.whyoleg.cryptography.algorithms.AES
+import dev.whyoleg.cryptography.algorithms.HMAC
+import dev.whyoleg.cryptography.algorithms.SHA1
+import dev.whyoleg.cryptography.algorithms.SHA256
 import io.github.oshai.kotlinlogging.KotlinLogging
 import io.ktor.client.*
 import io.ktor.client.call.*
@@ -11,21 +14,21 @@ import io.ktor.client.plugins.logging.*
 import io.ktor.client.plugins.logging.LogLevel.*
 import io.ktor.client.plugins.logging.LoggingFormat.*
 import io.ktor.client.request.*
-import io.ktor.client.request.forms.submitForm
-import io.ktor.client.statement.bodyAsText
+import io.ktor.client.request.forms.*
+import io.ktor.client.statement.*
 import io.ktor.http.*
 import io.ktor.serialization.kotlinx.xml.*
 import io.ktor.util.*
-import kotlin.io.encoding.Base64
-import kotlin.math.pow
-import kotlin.time.Clock
-import kotlin.time.Duration.Companion.seconds
 import kotlinx.io.Buffer
 import kotlinx.io.readByteArray
 import nl.adaptivity.xmlutil.XmlDeclMode
 import nl.adaptivity.xmlutil.serialization.XML
+import kotlin.io.encoding.Base64
+import kotlin.math.pow
+import kotlin.time.Clock
+import kotlin.time.Duration.Companion.seconds
 
-class VipAccess(val clientId: String = "kotlin-vipaccess") : AutoCloseable {
+public class VipAccess(public val clientId: String = "kotlin-vipaccess") : AutoCloseable {
 
   private val log = KotlinLogging.logger {}
 
@@ -105,7 +108,7 @@ class VipAccess(val clientId: String = "kotlin-vipaccess") : AutoCloseable {
    * @param tokenModel Token model type (default: "SYMC")
    * @return Token with generated ID and secret for OTP generation
    */
-  suspend fun provision(tokenModel: String = "SYMC"): Token {
+  public suspend fun provision(tokenModel: String = "SYMC"): Token {
     log.info { "Provisioning Semantic VIP credential..." }
     val timestamp = Clock.System.now().epochSeconds
     val signedData = hmacSha256("$timestamp${timestamp}BOARDID${clientId}Symantec")
@@ -205,7 +208,7 @@ class VipAccess(val clientId: String = "kotlin-vipaccess") : AutoCloseable {
     return (truncated % divisor).toString().padStart(digits, '0')
   }
 
-  suspend fun generateTotp(token: Token, timestamp: Long = Clock.System.now().epochSeconds) =
+  public suspend fun generateTotp(token: Token, timestamp: Long = Clock.System.now().epochSeconds): String =
       generateHotp(
           secret = Base64.decode(token.secret),
           counter = timestamp / token.period,
@@ -220,7 +223,7 @@ class VipAccess(val clientId: String = "kotlin-vipaccess") : AutoCloseable {
    * @param accountName Account name (default: token ID)
    * @return OTP URI string
    */
-  fun otpUri(
+  public fun otpUri(
       token: Token,
       issuer: String = clientId,
       accountName: String = token.id,
@@ -243,7 +246,7 @@ class VipAccess(val clientId: String = "kotlin-vipaccess") : AutoCloseable {
    * @param timestamp Unix timestamp (default: current time)
    * @return Token validation result
    */
-  suspend fun verifyToken(
+  public suspend fun verifyToken(
       token: Token,
       timestamp: Long = Clock.System.now().epochSeconds,
   ): TokenResult =
@@ -281,7 +284,7 @@ class VipAccess(val clientId: String = "kotlin-vipaccess") : AutoCloseable {
    * @param timestamp Unix timestamp (default: current time)
    * @return Token sync result
    */
-  suspend fun syncToken(
+  public suspend fun syncToken(
       token: Token,
       timestamp: Long = Clock.System.now().epochSeconds,
   ): TokenResult =
@@ -312,9 +315,9 @@ class VipAccess(val clientId: String = "kotlin-vipaccess") : AutoCloseable {
         Failed(e.message ?: "Unknown error")
       }
 
-  override fun close() = client.close()
+  override fun close(): Unit = client.close()
 }
 
 /** Converts OTP to Symantec VIP form format: "123456" → {cr1: "1", cr2: "2", ..., cr6: "6"} */
-fun String.formParams(prefix: String) =
+private fun String.formParams(prefix: String) =
     mapIndexed { i, c -> "$prefix${i + 1}" to c.toString() }.toMap()
