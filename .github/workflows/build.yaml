@@ -63,7 +63,6 @@ jobs:
           version="${GITHUB_REF_NAME#v}"
           echo "::notice title=Maven Central Publish::Publishing version ${version} (from tag ${GITHUB_REF_NAME})"
           echo "🚀 Publishing kotlin-vipaccess version ${version} to Maven Central (resolved from tag ${GITHUB_REF_NAME})"
-          # macOS sed requires an explicit empty backup suffix with -i
           sed -i '' -E "/^  publishing:/,/^    version:/ s|^    version: .*|    version: ${version}|" module.yaml
           ./kotlin publish mavenCentral
 
