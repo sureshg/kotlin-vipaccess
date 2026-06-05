@@ -37,6 +37,8 @@ jobs:
 
       - name: 🅺 Cache Kotlin Toolchain
         uses: sureshg/actions/kotlin-toolchain-cache@v1
+        with:
+          konan: 'true'
 
       - name: 🏗️ Build
         run: ./kotlin build
