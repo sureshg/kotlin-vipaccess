@@ -17,11 +17,6 @@ settings:
     jdk:
       version: 26
       distributions: [ zulu, temurin ]
-    test:
-      junitPlatformVersion: 6.1.0
-      freeJvmArgs:
-        - --enable-native-access=ALL-UNNAMED
-        - -Djunit.platform.reporting.open.xml.enabled=true
 
   kotlin:
     version: 2.4.10
@@ -30,11 +25,10 @@ settings:
     progressiveMode: true
     allWarningsAsErrors: true
     suppressWarnings: false
-    powerAssert: enabled
     verbose: false
     freeCompilerArgs:
-      - -Xexplicit-api=strict
       - -Wextra
+      - -Xexplicit-api=strict
       - -Xcollection-literals
       - -Xreport-all-warnings
       - -Xreturn-value-checker=full
@@ -77,21 +71,26 @@ settings:
         - name: The Apache License, Version 2.0
           url: https://www.apache.org/licenses/LICENSE-2.0.txt
 
+settings@jvm:
+  java:
+    compileIncrementally: true
+    freeCompilerArgs:
+      - -Xlint:all
+  jvm:
+    test:
+      junitPlatformVersion: 6.1.3
+      freeJvmArgs:
+        - --enable-native-access=ALL-UNNAMED
+        - -Djunit.platform.reporting.open.xml.enabled=true
+
 settings@native:
   kotlin:
     optIns:
       - kotlinx.cinterop.ExperimentalForeignApi
       - kotlin.experimental.ExperimentalNativeApi
 
-test-settings:
-  kotlin:
-    freeCompilerArgs:
-      - -Xexplicit-api=disable
-
 dependencies:
   - bom: $libs.kotlin.bom
-  - bom: $libs.kotlinx.coroutines.bom
-  - bom: $libs.kotlinx.serialization.bom
   - bom: $libs.ktor.bom
   - $libs.kotlinx.coroutines.core
   - $libs.kotlin.logging
@@ -103,7 +102,6 @@ dependencies:
   - $libs.ktor.client.resources
   - $libs.ktor.client.auth
   - $libs.ktor.client.serialization
-  - $libs.ktor.client.websockets
   - $libs.ktor.serialization.xml
   - $libs.kotlin.cryptography.core
   - $libs.kotlin.cryptography.optimal
@@ -111,6 +109,20 @@ dependencies:
 
 dependencies@native:
   - $libs.ktor.client.curl
+
+test-settings:
+  kotlin:
+    freeCompilerArgs:
+      - -Xexplicit-api=disable
+    powerAssert:
+      enabled: true
+      functions:
+        - kotlin.assert
+        - kotlin.require
+        - kotlin.test.assertTrue
+        - kotlin.test.assertEquals
+        - kotlin.test.assertNull
+        - kotlin.test.assertContentEquals
 
 test-dependencies:
   - $libs.kotlin.test
