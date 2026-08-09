@@ -9,7 +9,7 @@ Kotlin Multiplatform library for [Symantec VIP Access](https://vip.symantec.com/
 
 ### Features
 
-- 🌐 Kotlin Multiplatform — JVM, Native (Linux/macOS/Windows), JS, and Wasm/JS targets
+- 🌐 Kotlin Multiplatform - `JVM`, `Native` (Linux/macOS/Windows), `JS` and `Wasm/JS` targets
 - 🔑 Provision VIP Access credentials directly from Symantec
 - ⏱️ Generate TOTP/HOTP codes ([RFC 6238](https://datatracker.ietf.org/doc/html/rfc6238),
   [RFC 4226](https://datatracker.ietf.org/doc/html/rfc4226))
@@ -49,9 +49,9 @@ val client = VipAccess(clientId = "kotlin-vipaccess")
 val token = client.provision()
 println("ID: ${token.id}")
 
-// Generate the current OTP
-val otp = client.generateTotp(token)
-println("OTP: $otp")
+// Generate the current TOTP
+val totp = client.generateOtp(token)
+println("TOTP: $totp")
 
 // Verify and sync with Symantec
 when (client.verifyToken(token)) {
@@ -73,18 +73,7 @@ Get the OTP URI and add it to your authenticator of choice:
 - [Authenticator Extension](https://github.com/Authenticator-Extension/Authenticator) (Chrome) — paste the full
   `otpauth://` URI
 
-## 🎯 Supported Targets
-
-| Target              | Status |
-|---------------------|--------|
-| JVM                 | ✅     |
-| Linux (x64 / arm64) | ✅     |
-| macOS (arm64)       | ✅     |
-| Windows (mingwX64)  | ✅     |
-| JS                  | ✅     |
-| Wasm/JS             | ✅     |
-
-## 🔧 Build & Test
+## Build & Test
 
 ```bash
 $ ./kotlin build                # Build all targets
@@ -92,7 +81,7 @@ $ ./kotlin test                 # Run tests
 $ ./kotlin publish mavenLocal   # Publish to local Maven repository
 ```
 
-## 📦 Release
+## Release
 
 Push a version tag to publish to Maven Central and create a GitHub release:
 

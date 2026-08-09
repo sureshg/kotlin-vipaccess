@@ -1,5 +1,6 @@
 package dev.suresh.vip
 
+import kotlin.io.encoding.Base64
 import kotlin.test.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.test.runTest
@@ -24,9 +25,34 @@ class VipAccessTest {
   fun generateTotp() = runTest {
     withContext(Dispatchers.Default) {
       val token = vipAccess.provision()
-      val otp = vipAccess.generateTotp(token)
+      val otp = vipAccess.generateOtp(token)
       assertEquals(6, otp.length)
       assertTrue(otp.all { it.isDigit() })
+    }
+  }
+
+  @Test
+  fun hotpRfc4226Vectors() = runTest {
+    val secret = Base64.encode("12345678901234567890".encodeToByteArray())
+    val expected: List<String> =
+        [
+            "755224",
+            "287082",
+            "359152",
+            "969429",
+            "338314",
+            "254676",
+            "287922",
+            "162583",
+            "399871",
+            "520489",
+        ]
+
+    expected.forEachIndexed { counter, otp ->
+      assertEquals(
+          otp,
+          vipAccess.generateOtp(Token(id = "HOTP", secret = secret, counter = counter.toLong())),
+      )
     }
   }
 
@@ -38,6 +64,16 @@ class VipAccessTest {
       assertTrue(uri.startsWith("otpauth://totp/kotlin-vipaccess:${token.id}?secret="))
       assertTrue(uri.contains("&issuer=kotlin-vipaccess"))
     }
+  }
+
+  @Test
+  fun hotpOtpUri() {
+    val token = Token(id = "HOTP", secret = Base64.encode([1]), counter = 7)
+    val uri = vipAccess.otpUri(token)
+
+    assertTrue(uri.startsWith("otpauth://hotp/"))
+    assertTrue("&counter=7" in uri)
+    assertTrue("&period=" !in uri)
   }
 
   @Test

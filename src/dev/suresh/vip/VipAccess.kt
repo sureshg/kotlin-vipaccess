@@ -28,7 +28,7 @@ import kotlinx.io.readByteArray
 import nl.adaptivity.xmlutil.XmlDeclMode
 import nl.adaptivity.xmlutil.serialization.XML
 
-public class VipAccess(public val clientId: String = "kotlin-vipaccess") : AutoCloseable {
+public class VipAccess(private val clientId: String = "kotlin-vipaccess") : AutoCloseable {
 
   private val log = KotlinLogging.logger {}
 
@@ -148,14 +148,16 @@ public class VipAccess(public val clientId: String = "kotlin-vipaccess") : AutoC
     val secret = res.SecretContainer.Device.Secret
     val iv = Base64.decode(res.SecretContainer.EncryptionMethod.IV)
     val cipher = Base64.decode(secret.Data.Cipher)
+    val usage = secret.Usage
 
-    val [_, algo, _, digitsStr] = secret.Usage.AI.type.split("-")
-    require(digitsStr.endsWith("DIGITS")) { "Unknown algorithm: ${secret.Usage.AI.type}" }
+    val [_, algo, _, digitsStr] = usage.AI.type.split("-")
+    require(digitsStr.endsWith("DIGITS")) { "Unknown algorithm: ${usage.AI.type}" }
 
     return Token(
         id = secret.Id,
         secret = Base64.encode(decryptAes(cipher, iv)),
-        period = secret.Usage.TimeStep,
+        period = usage.TimeStep ?: 30,
+        counter = usage.Counter,
         algorithm = algo.lowercase(),
         digits = digitsStr.removeSuffix("DIGITS").toInt(),
     )
@@ -208,21 +210,28 @@ public class VipAccess(public val clientId: String = "kotlin-vipaccess") : AutoC
     return (truncated % divisor).toString().padStart(digits, '0')
   }
 
-  public suspend fun generateTotp(
+  private suspend fun generateHotp(token: Token, counter: Long): String =
+      generateHotp(Base64.decode(token.secret), counter, token.digits)
+
+  private suspend fun generateTotp(
+      token: Token,
+      timestamp: Long = Clock.System.now().epochSeconds,
+  ): String = generateHotp(token, timestamp / token.period)
+
+  public suspend fun generateOtp(
       token: Token,
       timestamp: Long = Clock.System.now().epochSeconds,
   ): String =
-      generateHotp(
-          secret = Base64.decode(token.secret),
-          counter = timestamp / token.period,
-          digits = token.digits,
-      )
+      when (token.type) {
+        "hotp" -> generateHotp(token, requireNotNull(token.counter))
+        else -> generateTotp(token, timestamp)
+      }
 
   /**
    * Generates an OTP URI (otpauth://) compatible with authenticator apps.
    *
    * @param token Token configuration
-   * @param issuer Issuer name (default: "VIP Access")
+   * @param issuer Issuer name (default: client ID)
    * @param accountName Account name (default: token ID)
    * @return OTP URI string
    */
@@ -237,9 +246,12 @@ public class VipAccess(public val clientId: String = "kotlin-vipaccess") : AutoC
       append("&issuer=$issuer")
       if (token.algorithm.uppercase() != "SHA1") append("&algorithm=${token.algorithm.uppercase()}")
       if (token.digits != 6) append("&digits=${token.digits}")
-      if (token.period != 30) append("&period=${token.period}")
+      when (token.type) {
+        "hotp" -> append("&counter=${token.counter}")
+        else -> if (token.period != 30) append("&period=${token.period}")
+      }
     }
-    return "otpauth://totp/$issuer:$accountName?$params"
+    return "otpauth://${token.type}/$issuer:$accountName?$params"
   }
 
   /**
@@ -254,7 +266,7 @@ public class VipAccess(public val clientId: String = "kotlin-vipaccess") : AutoC
       timestamp: Long = Clock.System.now().epochSeconds,
   ): TokenResult =
       try {
-        val otp = generateTotp(token, timestamp)
+        val otp = generateOtp(token, timestamp)
         val response =
             client.submitForm(
                 url = "https://vip.symantec.com/otpCheck",
@@ -266,7 +278,7 @@ public class VipAccess(public val clientId: String = "kotlin-vipaccess") : AutoC
                     },
             )
 
-        response.bodyAsText().toTokenResult()
+        response.bodyAsText().toTokenResult(token.advanced(1))
       } catch (e: Exception) {
         log.error(e) { "Token check failed" }
         Failed(e.message ?: "Unknown error")
@@ -287,8 +299,15 @@ public class VipAccess(public val clientId: String = "kotlin-vipaccess") : AutoC
       timestamp: Long = Clock.System.now().epochSeconds,
   ): TokenResult =
       try {
-        val otp1 = generateTotp(token, timestamp - token.period)
-        val otp2 = generateTotp(token, timestamp)
+        val [otp1, otp2] =
+            when (token.type) {
+              "hotp" -> {
+                requireNotNull(token.counter)
+                generateHotp(token, token.counter) to generateHotp(token, token.counter + 1)
+              }
+              else ->
+                  generateTotp(token, timestamp - token.period) to generateTotp(token, timestamp)
+            }
 
         val response =
             client.submitForm(
@@ -302,7 +321,7 @@ public class VipAccess(public val clientId: String = "kotlin-vipaccess") : AutoC
                     },
             )
 
-        response.bodyAsText().toTokenResult()
+        response.bodyAsText().toTokenResult(token.advanced(2))
       } catch (e: Exception) {
         log.error(e) { "Token sync failed" }
         Failed(e.message ?: "Unknown error")
@@ -314,14 +333,15 @@ public class VipAccess(public val clientId: String = "kotlin-vipaccess") : AutoC
 /** Converts OTP to Symantec VIP form format: "123456" → {cr1: "1", cr2: "2", ..., cr6: "6"} */
 private fun String.formParams(prefix: String) = mapIndexed { i, c ->
   "$prefix${i + 1}" to c.toString()
-}.toMap()
+}
+    .toMap()
 
 /** Maps a Symantec OTP endpoint response to a [TokenResult]. */
-private fun String.toTokenResult(): TokenResult =
+private fun String.toTokenResult(success: Token) =
     when {
       ["VIP Credential is working correctly", "VIP Credential is successfully synced"].any {
         it in this
-      } -> Success
+      } -> Success(success)
       "VIP credential needs to be sync" in this -> NeedsSync
       else -> Failed("Unexpected response: $this")
     }
