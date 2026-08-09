@@ -44,14 +44,13 @@ class VipAccessTest {
   fun verifyAndSync() = runTest {
     withContext(Dispatchers.Default) {
       val token = vipAccess.provision()
-      when (vipAccess.verifyToken(token)) {
-        is TokenResult.Success -> return@withContext
-        is TokenResult.NeedsSync -> {
-          val _ = vipAccess.syncToken(token)
-          assertTrue(vipAccess.verifyToken(token) is TokenResult.Success)
-        }
-        is TokenResult.Failed -> fail("Token verification failed")
-      }
+      val verified =
+          when (val result = vipAccess.verifyToken(token)) {
+            is Success -> true
+            is NeedsSync -> vipAccess.syncToken(token) is Success
+            is Failed -> fail(result.error)
+          }
+      assertTrue(verified)
     }
   }
 }

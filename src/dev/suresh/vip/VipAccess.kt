@@ -13,22 +13,20 @@ import io.ktor.client.call.*
 import io.ktor.client.plugins.*
 import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.client.plugins.logging.*
-import io.ktor.client.plugins.logging.LogLevel.*
-import io.ktor.client.plugins.logging.LoggingFormat.*
 import io.ktor.client.request.*
 import io.ktor.client.request.forms.*
 import io.ktor.client.statement.*
 import io.ktor.http.*
 import io.ktor.serialization.kotlinx.xml.*
 import io.ktor.util.*
-import kotlinx.io.Buffer
-import kotlinx.io.readByteArray
-import nl.adaptivity.xmlutil.XmlDeclMode
-import nl.adaptivity.xmlutil.serialization.XML
 import kotlin.io.encoding.Base64
 import kotlin.math.pow
 import kotlin.time.Clock
 import kotlin.time.Duration.Companion.seconds
+import kotlinx.io.Buffer
+import kotlinx.io.readByteArray
+import nl.adaptivity.xmlutil.XmlDeclMode
+import nl.adaptivity.xmlutil.serialization.XML
 
 public class VipAccess(public val clientId: String = "kotlin-vipaccess") : AutoCloseable {
 
@@ -210,7 +208,10 @@ public class VipAccess(public val clientId: String = "kotlin-vipaccess") : AutoC
     return (truncated % divisor).toString().padStart(digits, '0')
   }
 
-  public suspend fun generateTotp(token: Token, timestamp: Long = Clock.System.now().epochSeconds): String =
+  public suspend fun generateTotp(
+      token: Token,
+      timestamp: Long = Clock.System.now().epochSeconds,
+  ): String =
       generateHotp(
           secret = Base64.decode(token.secret),
           counter = timestamp / token.period,
@@ -265,12 +266,7 @@ public class VipAccess(public val clientId: String = "kotlin-vipaccess") : AutoC
                     },
             )
 
-        val text = response.bodyAsText()
-        when {
-          Success.res in text -> Success
-          NeedsSync.res in text -> NeedsSync
-          else -> Failed("Unexpected response: $text")
-        }
+        response.bodyAsText().toTokenResult()
       } catch (e: Exception) {
         log.error(e) { "Token check failed" }
         Failed(e.message ?: "Unknown error")
@@ -306,12 +302,7 @@ public class VipAccess(public val clientId: String = "kotlin-vipaccess") : AutoC
                     },
             )
 
-        val text = response.bodyAsText()
-        when {
-          Success.res in text -> Success
-          NeedsSync.res in text -> NeedsSync
-          else -> Failed("Unexpected response: $text")
-        }
+        response.bodyAsText().toTokenResult()
       } catch (e: Exception) {
         log.error(e) { "Token sync failed" }
         Failed(e.message ?: "Unknown error")
@@ -321,5 +312,16 @@ public class VipAccess(public val clientId: String = "kotlin-vipaccess") : AutoC
 }
 
 /** Converts OTP to Symantec VIP form format: "123456" → {cr1: "1", cr2: "2", ..., cr6: "6"} */
-private fun String.formParams(prefix: String) =
-    mapIndexed { i, c -> "$prefix${i + 1}" to c.toString() }.toMap()
+private fun String.formParams(prefix: String) = mapIndexed { i, c ->
+  "$prefix${i + 1}" to c.toString()
+}.toMap()
+
+/** Maps a Symantec OTP endpoint response to a [TokenResult]. */
+private fun String.toTokenResult(): TokenResult =
+    when {
+      ["VIP Credential is working correctly", "VIP Credential is successfully synced"].any {
+        it in this
+      } -> Success
+      "VIP credential needs to be sync" in this -> NeedsSync
+      else -> Failed("Unexpected response: $this")
+    }

@@ -79,10 +79,10 @@ public data class Token(
     get() = period - (Clock.System.now().epochSeconds % period).toInt()
 }
 
-public sealed class TokenResult(public val res: String) {
-  public data object Success : TokenResult("VIP Credential is working correctly")
+public sealed interface TokenResult {
+  public data object Success : TokenResult
 
-  public data object NeedsSync : TokenResult("VIP credential needs to be sync")
+  public data object NeedsSync : TokenResult
 
-  public data class Failed(val error: String) : TokenResult("")
+  public data class Failed(val error: String) : TokenResult
 }
