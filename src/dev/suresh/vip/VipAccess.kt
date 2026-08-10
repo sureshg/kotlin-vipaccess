@@ -213,10 +213,8 @@ public class VipAccess(private val clientId: String = "kotlin-vipaccess") : Auto
   private suspend fun generateHotp(token: Token, counter: Long): String =
       generateHotp(Base64.decode(token.secret), counter, token.digits)
 
-  private suspend fun generateTotp(
-      token: Token,
-      timestamp: Long = Clock.System.now().epochSeconds,
-  ): String = generateHotp(token, timestamp / token.period)
+  private suspend fun generateTotp(token: Token, timestamp: Long): String =
+      generateHotp(token, timestamp / token.period)
 
   public suspend fun generateOtp(
       token: Token,

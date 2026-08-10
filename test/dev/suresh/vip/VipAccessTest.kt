@@ -10,6 +10,12 @@ class VipAccessTest {
 
   private val vipAccess = VipAccess()
 
+  private val testToken =
+      Token(
+          id = "SYMC_TEST",
+          secret = Base64.encode("12345678901234567890".encodeToByteArray()),
+      )
+
   @Test
   fun provision() = runTest {
     withContext(Dispatchers.Default) {
@@ -18,21 +24,25 @@ class VipAccessTest {
       assertTrue(token.secret.isNotEmpty())
       assertEquals(30, token.period)
       assertEquals(6, token.digits)
+
+      val verified =
+          when (val result = vipAccess.verifyToken(token)) {
+            is Success -> true
+            is NeedsSync -> vipAccess.syncToken(token) is Success
+            is Failed -> fail(result.error)
+          }
+      assertTrue(verified)
     }
   }
 
   @Test
   fun generateTotp() = runTest {
-    withContext(Dispatchers.Default) {
-      val token = vipAccess.provision()
-      val otp = vipAccess.generateOtp(token)
-      assertEquals(6, otp.length)
-      assertTrue(otp.all { it.isDigit() })
-    }
+    val otp = vipAccess.generateOtp(testToken, timestamp = 59)
+    assertEquals("287082", otp)
   }
 
   @Test
-  fun hotpRfc4226Vectors() = runTest {
+  fun generateHotp() = runTest {
     val secret = Base64.encode("12345678901234567890".encodeToByteArray())
     val expected: List<String> =
         [
@@ -47,7 +57,6 @@ class VipAccessTest {
             "399871",
             "520489",
         ]
-
     expected.forEachIndexed { counter, otp ->
       assertEquals(
           otp,
@@ -57,13 +66,10 @@ class VipAccessTest {
   }
 
   @Test
-  fun otpUri() = runTest {
-    withContext(Dispatchers.Default) {
-      val token = vipAccess.provision()
-      val uri = vipAccess.otpUri(token)
-      assertTrue(uri.startsWith("otpauth://totp/kotlin-vipaccess:${token.id}?secret="))
-      assertTrue(uri.contains("&issuer=kotlin-vipaccess"))
-    }
+  fun otpUri() {
+    val uri = vipAccess.otpUri(testToken)
+    assertTrue(uri.startsWith("otpauth://totp/kotlin-vipaccess:${testToken.id}?secret="))
+    assertTrue(uri.contains("&issuer=kotlin-vipaccess"))
   }
 
   @Test
@@ -74,19 +80,5 @@ class VipAccessTest {
     assertTrue(uri.startsWith("otpauth://hotp/"))
     assertTrue("&counter=7" in uri)
     assertTrue("&period=" !in uri)
-  }
-
-  @Test
-  fun verifyAndSync() = runTest {
-    withContext(Dispatchers.Default) {
-      val token = vipAccess.provision()
-      val verified =
-          when (val result = vipAccess.verifyToken(token)) {
-            is Success -> true
-            is NeedsSync -> vipAccess.syncToken(token) is Success
-            is Failed -> fail(result.error)
-          }
-      assertTrue(verified)
-    }
   }
 }

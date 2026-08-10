@@ -16,15 +16,15 @@ Kotlin Multiplatform library for [Symantec VIP Access](https://vip.symantec.com/
 - 🔗 Export to `otpauth://` URIs for any authenticator app
 - ✅ Verify and re-sync tokens against the Symantec server
 
-## 🚀 Quick Start
+## Quick Start
 
-<details>
+<details open>
 <summary><b>Kotlin Toolchain</b></summary>
 
 ```yaml
 # module.yaml
 dependencies:
-  - dev.suresh.vipaccess:kotlin-vipaccess:0.1.0
+  - dev.suresh.vipaccess:kotlin-vipaccess:<latest_version>
 ```
 
 </details>
@@ -34,7 +34,7 @@ dependencies:
 
 ```kotlin
 dependencies {
-    implementation("dev.suresh.vipaccess:kotlin-vipaccess:0.1.0")
+    implementation("dev.suresh.vipaccess:kotlin-vipaccess:<latest_version>")
 }
 ```
 
