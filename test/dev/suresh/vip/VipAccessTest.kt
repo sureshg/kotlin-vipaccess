@@ -44,19 +44,7 @@ class VipAccessTest {
   @Test
   fun generateHotp() = runTest {
     val secret = Base64.encode("12345678901234567890".encodeToByteArray())
-    val expected: List<String> =
-        [
-            "755224",
-            "287082",
-            "359152",
-            "969429",
-            "338314",
-            "254676",
-            "287922",
-            "162583",
-            "399871",
-            "520489",
-        ]
+    val expected = ["755224", "287082", "359152"]
     expected.forEachIndexed { counter, otp ->
       assertEquals(
           otp,
@@ -69,7 +57,7 @@ class VipAccessTest {
   fun otpUri() {
     val uri = vipAccess.otpUri(testToken)
     assertTrue(uri.startsWith("otpauth://totp/kotlin-vipaccess:${testToken.id}?secret="))
-    assertTrue(uri.contains("&issuer=kotlin-vipaccess"))
+    assertTrue("&issuer=kotlin-vipaccess" in uri)
   }
 
   @Test

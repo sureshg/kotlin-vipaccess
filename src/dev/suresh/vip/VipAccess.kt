@@ -22,13 +22,16 @@ import io.ktor.util.*
 import kotlin.io.encoding.Base64
 import kotlin.math.pow
 import kotlin.time.Clock
-import kotlin.time.Duration.Companion.seconds
 import kotlinx.io.Buffer
 import kotlinx.io.readByteArray
 import nl.adaptivity.xmlutil.XmlDeclMode
 import nl.adaptivity.xmlutil.serialization.XML
 
-public class VipAccess(private val clientId: String = "kotlin-vipaccess") : AutoCloseable {
+public class VipAccess(
+    private val clientId: String = "kotlin-vipaccess",
+    timeout: Timeout = Timeout(),
+    retry: Retry = Retry(),
+) : AutoCloseable {
 
   private val log = KotlinLogging.logger {}
 
@@ -63,16 +66,16 @@ public class VipAccess(private val clientId: String = "kotlin-vipaccess") : Auto
   private val client = HttpClient {
     install(ContentNegotiation) { xml(xml) }
     install(HttpRequestRetry) {
-      maxRetries = 2
+      maxRetries = retry.maxRetries
       retryOnException(retryOnTimeout = true)
       retryOnServerErrors()
-      exponentialDelay(maxDelayMs = 10.seconds.inWholeMilliseconds)
+      exponentialDelay(maxDelayMs = retry.maxDelay.inWholeMilliseconds)
     }
 
     install(HttpTimeout) {
-      connectTimeoutMillis = 5.seconds.inWholeMilliseconds
-      requestTimeoutMillis = 5.seconds.inWholeMilliseconds
-      socketTimeoutMillis = 5.seconds.inWholeMilliseconds
+      requestTimeoutMillis = timeout.request.inWholeMilliseconds
+      connectTimeoutMillis = timeout.connect.inWholeMilliseconds
+      socketTimeoutMillis = timeout.socket.inWholeMilliseconds
     }
 
     install(Logging) {

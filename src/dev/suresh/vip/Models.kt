@@ -3,6 +3,8 @@
 package dev.suresh.vip
 
 import kotlin.time.Clock
+import kotlin.time.Duration
+import kotlin.time.Duration.Companion.seconds
 import kotlinx.serialization.Serializable
 import nl.adaptivity.xmlutil.serialization.*
 
@@ -32,6 +34,17 @@ public sealed interface TokenResult {
 
   public data class Failed(val error: String) : TokenResult
 }
+
+public data class Timeout(
+    val request: Duration = 5.seconds,
+    val connect: Duration = 5.seconds,
+    val socket: Duration = 5.seconds,
+)
+
+public data class Retry(
+    val maxRetries: Int = 2,
+    val maxDelay: Duration = 5.seconds,
+)
 
 @Serializable
 internal data class GetSharedSecretResponse(
