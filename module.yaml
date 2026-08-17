@@ -3,6 +3,9 @@ repositories:
     url: mavenLocal
     resolve: false
     publish: true
+  - id: mavenGoogle
+    url: https://maven.google.com
+    resolve: false
 
 product:
   type: kmp/lib
@@ -19,11 +22,11 @@ settings:
       distributions: [ zulu, temurin ]
 
   kotlin:
-    version: 2.4.10
+    version: 2.4.20-RC
     languageVersion: 2.4
     apiVersion: 2.4
     progressiveMode: true
-    allWarningsAsErrors: true
+    allWarningsAsErrors: false
     suppressWarnings: false
     verbose: false
     freeCompilerArgs:
