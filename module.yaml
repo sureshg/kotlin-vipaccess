@@ -83,7 +83,6 @@ settings@jvm:
     test:
       junitPlatformVersion: 6.1.3
       freeJvmArgs:
-        - --enable-native-access=ALL-UNNAMED
         - -Djunit.platform.reporting.open.xml.enabled=true
 
 settings@native:
